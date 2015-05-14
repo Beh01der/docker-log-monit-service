@@ -1,0 +1,16 @@
+{
+  "name": "docker-log-monit-service",
+  "version": "1.0.0",
+  "description": "Service for monitoring logs in CloudUniverse",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Andrey Chausenko <andrey.chausenko@gmail.com> (https://memz.co)",
+  "license": "ISC",
+  "dependencies": {
+    "collections": "^1.2.3",
+    "node-docker-log-monitor": "^1.0.1",
+    "node-grok": "^1.0.1"
+  }
+}
