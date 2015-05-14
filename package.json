@@ -11,6 +11,7 @@
   "dependencies": {
     "collections": "^1.2.3",
     "node-docker-log-monitor": "^1.0.1",
-    "node-grok": "^1.0.1"
+    "node-grok": "^1.0.1",
+    "statsd-client": "^0.1.0"
   }
 }
