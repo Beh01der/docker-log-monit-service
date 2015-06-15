@@ -13,7 +13,7 @@ grok.loadDefault(function (patterns) {
     ' %{URIHOST:site}%{URIPATHPARAM:url}" %{INT:code} %{INT:request} %{INT:response} - %{NUMBER:took}' +
     ' \\[%{DATA:cache}\\] "%{DATA:mtag}" "%{DATA:agent}"');
 
-    monitor(['nginx'], function (event) {
+    monitor(['router'], function (event) {
         function logParsed(err, result) {
             if (!err) {
                 Object.addEach(event, result || empty);
@@ -21,6 +21,15 @@ grok.loadDefault(function (patterns) {
                 if (event.code && (code = parseInt(event.code))) {
                     sdc.increment('router.hit');
                     sdc.increment('router.hit.' + (Math.floor(code / 100) * 100));
+                }
+
+                if (event.url) {
+                    if (event.url.indexOf('api/note') != -1) {
+                        sdc.increment('api.note.hit');
+                        sdc.increment('api.hit');
+                    } else if (event.url.indexOf('api/policy') != -1) {
+                        sdc.increment('api.hit');
+                    }
                 }
             }
 
