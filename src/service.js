@@ -5,7 +5,7 @@ require('collections/shim-object');
 var empty = {};
 
 var SDC = require('statsd-client'),
-    sdc = new SDC({host: '172.17.42.1', port: 8125});
+    sdc = new SDC({host: process.env.HOST_IP, port: 8125});
 
 var patterns = grok.loadDefaultSync('grok-patterns');
 var logPattern = patterns.createPattern('%{IP:client} \\[%{TIMESTAMP_ISO8601:timestamp}\\] "%{WORD:method}' +
