@@ -9,9 +9,9 @@
   "author": "Andrey Chausenko <andrey.chausenko@gmail.com> (https://memz.co)",
   "license": "ISC",
   "dependencies": {
-    "collections": "3.0.0",
-    "node-docker-log-monitor": "1.0.4",
-    "node-grok": "1.0.8",
+    "metrix-js": "1.0.1",
+    "node-docker-log-monitor": "1.0.7",
+    "node-grok": "2.0.2",
     "statsd-client": "0.2.2"
   }
 }

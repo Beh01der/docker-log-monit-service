@@ -1,19 +1,19 @@
-"use strict";
-var monitor = require('node-docker-log-monitor');
-var grok = require('node-grok');
-var index_1 = require("metrix-js/lib/index");
-var statsdHost = process.env.STATSD_HOST || 'localhost';
-var statsdPort = process.env.STATSD_PORT || 8125;
-var logPatternStr = process.env.LOG_PATTERN || '%{IP:client} \\[%{TIMESTAMP_ISO8601:timestamp}\\] "%{WORD:method}' +
+import monitor = require('node-docker-log-monitor');
+import grok = require('node-grok');
+import { MetricsCollector } from "metrix-js/lib/index";
+
+let statsdHost = process.env.STATSD_HOST || 'localhost';
+let statsdPort = process.env.STATSD_PORT || 8125;
+let logPatternStr = process.env.LOG_PATTERN || '%{IP:client} \\[%{TIMESTAMP_ISO8601:timestamp}\\] "%{WORD:method}' +
     ' %{URIHOST:site}%{URIPATHPARAM:url}" %{INT:code} %{INT:request} %{INT:response} - %{NUMBER:took}' +
     ' \\[%{DATA:cache}\\] "%{DATA:mtag}" "%{DATA:agent}"';
-var selectorLabel = process.env.SELECTOR_LABEL || 'monitor-logs';
-var metrics;
+let selectorLabel = process.env.SELECTOR_LABEL || 'monitor-logs';
+let metrics;
 try {
     metrics = JSON.parse(process.env.METRICS);
+} catch(e) {
 }
-catch (e) {
-}
+
 if (!metrics || !metrics.length) {
     console.log('Could not read metric definitions from process.env.METRICS - using default');
     metrics = [
@@ -24,23 +24,31 @@ if (!metrics || !metrics.length) {
         { field: 'url', matcher: 'substring', match: 'api/policy', metric: 'api.hit' }
     ];
 }
-var SDC = require('statsd-client');
-var sdc = new SDC({ host: statsdHost, port: statsdPort });
-var collector = new index_1.MetricsCollector(function (metric) {
+
+let SDC = require('statsd-client');
+let sdc = new SDC({host: statsdHost, port: statsdPort});
+let collector = new MetricsCollector(metric => {
     sdc.increment(metric);
 });
 collector.addMetrics(metrics);
-var patterns = grok.loadDefaultSync('grok-patterns');
-var logPattern = patterns.createPattern(logPatternStr);
-console.log("Starting up docker log monitor with parameters:\n+ statsdHost = " + statsdHost + "\n+ statsdPort = " + statsdPort + "\n+ logPatternStr = " + logPatternStr + "\n+ selectorLabel = " + selectorLabel);
+
+let patterns = grok.loadDefaultSync('grok-patterns');
+let logPattern = patterns.createPattern(logPatternStr);
+
+console.log(`Starting up docker log monitor with parameters:
++ statsdHost = ${ statsdHost }
++ statsdPort = ${ statsdPort }
++ logPatternStr = ${ logPatternStr }
++ selectorLabel = ${ selectorLabel }`);
+
 monitor(function (event) {
     function logParsed(err, result) {
         if (!err) {
             collector.measure(result || {});
         }
     }
+
     if (event.log) {
         logPattern.parse(event.log, logParsed);
     }
-}, null, { selectorLabel: selectorLabel });
-//# sourceMappingURL=service.js.map
+}, null, {selectorLabel: selectorLabel});
