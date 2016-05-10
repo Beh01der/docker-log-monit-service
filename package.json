@@ -1,6 +1,6 @@
 {
   "name": "docker-log-monit-service",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Service for monitoring logs in CloudUniverse",
   "main": "index.js",
   "scripts": {
