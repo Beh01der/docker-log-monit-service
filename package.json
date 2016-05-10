@@ -10,7 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "metrix-js": "1.0.1",
-    "node-docker-log-monitor": "1.0.7",
+    "node-docker-log-monitor": "1.0.8",
     "node-grok": "2.0.2",
     "statsd-client": "0.2.2"
   }
